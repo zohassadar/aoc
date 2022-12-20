@@ -263,7 +263,7 @@ best_score = 0
 
 from itertools import combinations
 
-for (s1, hist1),(s2, hist2) in combinations(a.best_scores, 2):
+for (s1, hist1),(s2, hist2) in combinations(sorted(a.best_scores, reverse=True), 2):
     new_score = s1 + s2
     if new_score < best_score:
         continue
