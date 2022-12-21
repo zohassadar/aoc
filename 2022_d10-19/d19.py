@@ -1,7 +1,9 @@
 import re
-from time import perf_counter
-import numpy as np
 from functools import cache
+from math import prod
+from time import perf_counter
+
+import numpy as np
 
 sample = """Blueprint 1:
   Each ore robot costs 4 ore.
@@ -28,6 +30,7 @@ class Blueprint:
         obs_cost_clay,
         geo_cost_ore,
         geo_cost_obs,
+        limit,
         debug=False,
     ):
         self.index = index
@@ -51,7 +54,7 @@ class Blueprint:
             )
         )
 
-        self.limit = 24
+        self.limit = limit
         self.args = (
             index,
             ore_cost_ore,
@@ -60,6 +63,7 @@ class Blueprint:
             obs_cost_clay,
             geo_cost_ore,
             geo_cost_obs,
+            limit,
         )
         self.hash = hash(self.args)
         self.best_geo = 0
@@ -198,21 +202,30 @@ class Blueprint:
         return self.hash
 
 
-def get_data(text):
+def get_data(text, limit):
     numbers = re.findall(r"\d+", text)
     numiter = iter(numbers)
     results = []
     for _ in range(len(numbers) // 7):
-        results.append(Blueprint(*[int(next(numiter)) for _ in range(7)]))
+        results.append(Blueprint(*[int(next(numiter)) for _ in range(7)], limit))
     return results
 
 
-def print_answer(text):
+def print_answer(text, limit=24, debug=False):
     then = perf_counter()
-    data = get_data(text)
+    data = get_data(text, limit=limit)
+    if limit != 24:
+        data = data[:3]
     for d in data:
         d.recurse()
-    print(sum(d.index * d.best_geo for d in data), perf_counter() - then)
+    for d in data:
+        debug and print(f"{d.index=} {d.best_geo}")
+    if limit == 24:
+        print(sum(d.index * d.best_geo for d in data), end=" ")
+    else:
+        print(prod(d.best_geo for d in data), end=" ")
+
+    print(perf_counter() - then)
 
 
 print_answer(sample)
