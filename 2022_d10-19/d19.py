@@ -2,8 +2,14 @@ import re
 from functools import cache
 from math import prod
 from time import perf_counter
+from operator import itemgetter
+
 
 import numpy as np
+
+FIRST = itemgetter(0)
+OPTIMIZE = True
+OTHER_OPTIMIZE = True
 
 sample = """Blueprint 1:
   Each ore robot costs 4 ore.
@@ -67,6 +73,10 @@ class Blueprint:
         )
         self.hash = hash(self.args)
         self.best_geo = 0
+        if OPTIMIZE:
+            self.optimize = min
+        else:
+            self.optimize = lambda v: FIRST(v)
 
     @cache
     def best_case(self, minute):
@@ -102,7 +112,8 @@ class Blueprint:
             return
         remaining = self.limit - minute + 2
         best_case = geos + (remaining * (remaining + 1) // 2)
-        if best_case <= self.best_geo:
+
+        if OTHER_OPTIMIZE and best_case <= self.best_geo:
             self.debug and print(
                 pad
                 + f"Giving up at minute {minute} because {best_case} <= {self.best_geo}"
@@ -118,11 +129,11 @@ class Blueprint:
         if obsR and ore >= self.geo_cost_ore and obs >= self.geo_cost_obs:
             self.recurse(
                 minute,
-                min((ore - self.geo_cost_ore, self.ore_max)),
+                self.optimize((ore - self.geo_cost_ore, self.ore_max)),
                 oreR,
-                min((clay, self.obs_cost_clay)),
+                self.optimize((clay, self.obs_cost_clay)),
                 clayR,
-                min((obs - self.geo_cost_obs, self.geo_cost_obs)),
+                self.optimize((obs - self.geo_cost_obs, self.geo_cost_obs)),
                 obsR,
                 geos - 1,
                 geosR + 1,
@@ -135,11 +146,11 @@ class Blueprint:
         ):
             self.recurse(
                 minute,
-                min((ore - self.obs_cost_ore, self.ore_max)),
+                self.optimize((ore - self.obs_cost_ore, self.ore_max)),
                 oreR,
-                min((clay - self.obs_cost_clay, self.obs_cost_clay)),
+                self.optimize((clay - self.obs_cost_clay, self.obs_cost_clay)),
                 clayR,
-                min((obs - 1, self.geo_cost_obs)),
+                self.optimize((obs - 1, self.geo_cost_obs)),
                 obsR + 1,
                 geos,
                 geosR,
@@ -148,11 +159,11 @@ class Blueprint:
         if ore >= self.clay_cost_ore and clay < self.obs_cost_clay:
             self.recurse(
                 minute,
-                min((ore - self.clay_cost_ore, self.ore_max)),
+                self.optimize((ore - self.clay_cost_ore, self.ore_max)),
                 oreR,
-                min((clay - 1, self.obs_cost_clay)),
+                self.optimize((clay - 1, self.obs_cost_clay)),
                 clayR + 1,
-                min((obs, self.geo_cost_obs)),
+                self.optimize((obs, self.geo_cost_obs)),
                 obsR,
                 geos,
                 geosR,
@@ -161,11 +172,11 @@ class Blueprint:
         if ore >= self.ore_cost_ore and ore < self.ore_max:
             self.recurse(
                 minute,
-                min((ore - self.ore_cost_ore - 1, self.ore_max)),
+                self.optimize((ore - self.ore_cost_ore - 1, self.ore_max)),
                 oreR + 1,
-                min((clay, self.obs_cost_clay)),
+                self.optimize((clay, self.obs_cost_clay)),
                 clayR,
-                min((obs, self.geo_cost_obs)),
+                self.optimize((obs, self.geo_cost_obs)),
                 obsR,
                 geos,
                 geosR,
@@ -173,11 +184,11 @@ class Blueprint:
 
         self.recurse(
             minute,
-            min((ore, self.ore_max)),
+            self.optimize((ore, self.ore_max)),
             oreR,
-            min((clay, self.obs_cost_clay)),
+            self.optimize((clay, self.obs_cost_clay)),
             clayR,
-            min((obs, self.geo_cost_obs)),
+            self.optimize((obs, self.geo_cost_obs)),
             obsR,
             geos,
             geosR,
@@ -230,3 +241,7 @@ def print_answer(text, limit=24, debug=False):
 
 print_answer(sample)
 print_answer(real)
+# OTHER_OPTIMIZE = False
+print_answer(sample, debug=True, limit=32)
+# OPTIMIZE = False
+print_answer(real, debug=True, limit=32)
