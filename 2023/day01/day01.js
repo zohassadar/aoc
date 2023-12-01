@@ -1,7 +1,7 @@
 const fs = require('fs');
 data = fs.readFileSync("day01.input").asciiSlice()
 
-to_add = []
+part1ToAdd = []
 data.split("\n").forEach(line => {
     var numbers = [];
     [...line.matchAll(/\d/g)].forEach(match => {
@@ -9,14 +9,25 @@ data.split("\n").forEach(line => {
     }
     )
     if (numbers.length) {
-        to_add.push(parseInt(`${numbers[0]}${numbers.slice(-1)}`))
+        part1ToAdd.push(parseInt(`${numbers[0]}${numbers.slice(-1)}`))
     }
 }
 )
 const initialValue = 0
-const sum = to_add.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
+const part1Sum = part1ToAdd.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
 
-console.log(sum)
+console.log(part1Sum)
+
+/*
+
+Kirjava part 1:   
+
+eval(document.body.innerText.trim().split`\n`.map(d=>(console.log(Object.getPrototypeOf(d)),q=d.replace(/[^\d]/g,''),q[0]+q.at(-1))).join`+`)
+
+Modified for node: 
+*/
+console.log(eval(data.trim().split`\n`.map(d=>(q=d.replace(/[^\d]/g,''),q[0]+q.slice(-1))).join`+`))
+
 
 const conversion = {
     "one": "1",
@@ -40,21 +51,22 @@ const conversion = {
 }
 
 
-var part2_to_add = []
+var part2ToAdd = []
 data.split("\n").forEach(line => {
     var numbers = [];
+    // https://regex101.com/r/Z8Lwl5/1
     [...line.matchAll(/(?=(\d|one|two|three|four|five|six|seven|eight|nine))/g)].forEach(match => {
         numbers.push(match[1])
     }
     )
     var converted = []
-    numbers.forEach(number => {console.log(`Number: ${number} Converted: ${conversion[number]}`)})
+    // numbers.forEach(number => {console.log(`Number: ${number} Converted: ${conversion[number]}`)})
     numbers.forEach(number => converted.push(conversion[number]))
     if (converted.length) {
-        part2_to_add.push(parseInt(`${converted[0]}${converted.slice(-1)}`))
+        part2ToAdd.push(parseInt(`${converted[0]}${converted.slice(-1)}`))
     }
 }
 )
-const part2_sum = part2_to_add.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
+const part2Sum = part2ToAdd.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
 
-console.log(part2_sum)
+console.log(part2Sum)
