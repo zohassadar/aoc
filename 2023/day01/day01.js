@@ -26,7 +26,7 @@ eval(document.body.innerText.trim().split`\n`.map(d=>(q=d.replace(/[^\d]/g,''),q
 
 Modified for node: 
 */
-console.log(eval(data.trim().split`\n`.map(d=>(q=d.replace(/[^\d]/g,''),q[0]+q.slice(-1))).join`+`))
+console.log(eval(data.trim().split`\n`.map(d=>(q=d.replace(/[^\d]/g,''),q[0]+q.at(-1))).join`+`))
 
 
 const conversion = {
