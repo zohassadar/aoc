@@ -15,6 +15,6 @@ data.split("\n").forEach(line => {
 }
 )
 const initialValue = 0
-const sum = to_add.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+const sum = to_add.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
 
 console.log(sum)
