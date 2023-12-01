@@ -22,7 +22,7 @@ console.log(part1Sum)
 
 Kirjava part 1:   
 
-eval(document.body.innerText.trim().split`\n`.map(d=>(console.log(Object.getPrototypeOf(d)),q=d.replace(/[^\d]/g,''),q[0]+q.at(-1))).join`+`)
+eval(document.body.innerText.trim().split`\n`.map(d=>(q=d.replace(/[^\d]/g,''),q[0]+q.at(-1))).join`+`)
 
 Modified for node: 
 */
