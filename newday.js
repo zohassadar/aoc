@@ -21,7 +21,7 @@ fs.writeFileSync(`2023/${day}/${day}.js`, code)
 
 console.log("Give input:")
 
-// found stdin in example as 0, but this looks better
-var data = fs.readFileSync(process.stdin.fd, "utf-8");
+// todo: why doesn't process.stdin.fd work?
+var data = fs.readFileSync(0, "utf-8");
 
 fs.writeFileSync(`2023/${day}/${day}.input`, data.trim())
