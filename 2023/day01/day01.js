@@ -70,3 +70,45 @@ data.split("\n").forEach(line => {
 const part2Sum = part2ToAdd.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
 
 console.log(part2Sum)
+
+    /*
+     
+    Kirjava part 2:
+     
+    (n = `_|one|two|three|four|five|six|seven|eight|nine`),
+        (a = 0),
+        document.body.innerText.trim().split`\n`.map(
+            (t) => (
+                (s = [...t].map(
+                    (a, i) => (
+                        (q = n.split`|`.indexOf(
+                            t.match(RegExp(`^.{${i}}(${n})`))?.[1],
+                        )),
+                        ~q ? q : 1 / a ? a : []
+                    ),
+                ).join``),
+                (a += +(s[0] + s.at(-1)))
+            ),
+        ),
+        a;
+    
+    Modified for node:
+    */
+
+    ((n = `_|one|two|three|four|five|six|seven|eight|nine`),
+        (a = 0),
+        data.trim().split`\n`.map(
+            (t) => (
+                console.log(t),
+                (s = [...t].map(
+                    (a, i) => (
+                        (q = n.split`|`.indexOf(
+                            t.match(RegExp(`^.{${i}}(${n})`))?.[1],
+                        )),
+                        ~q ? q : 1 / a ? a : []
+                    ),
+                ).join``),
+                (a += +(s[0] + s.at(-1)))
+            ),
+        ),
+        a)

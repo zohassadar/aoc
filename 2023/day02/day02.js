@@ -36,3 +36,12 @@ data.trim().split`\n`.forEach((thing, i) => (
 
 console.log(part1.reduce((accum, val) => accum + val, 0))
 console.log(part2.reduce((accum, val) => accum + val, 0))
+
+
+/*
+
+import re; lim=dict(r=12,g=13,b=14); sum( i+1 if 0 not in (int(m[0]) <= lim[m[1]] for m in re.findall(r'(\d+) (\w)', l)) else 0 for i,l in enumerate(open('day02.input').read().splitlines())) 
+
+import re;p=re.compile(r'(\d+) g|(\d+) r|(\d+) b').findall;m=lambda n,l: max(int(i[n]) if i[n] else 0 for i in l);sum(m(0,p(l))*m(1,p(l))*m(2,p(l)) for l in open('day02.input').read().splitlines())
+
+*/
