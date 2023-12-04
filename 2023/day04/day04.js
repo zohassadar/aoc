@@ -24,7 +24,7 @@ for ([index, line] of Object.entries(data.split('\n'))) {
             last = last < cardCount.length ? last : cardCount.length
             // console.log(`i: ${idx+1} f:${first} l: ${last}`)
             for (i=first;i<last;i+=1){
-                cardCount[i]+=(1*cardCount[idx])
+                cardCount[i]+=(cardCount[idx])
                 }
         }
     }
