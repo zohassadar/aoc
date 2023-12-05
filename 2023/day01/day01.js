@@ -67,7 +67,9 @@ data.split("\n").forEach(line => {
     }
 }
 )
-const part2Sum = part2ToAdd.reduce((accumulator, currentValue) => accumulator + currentValue, initialValue)
+
+func = (accumulator, currentValue) => accumulator + currentValue
+const part2Sum = part2ToAdd.reduce(func, initialValue)
 
 console.log(part2Sum)
 
@@ -95,11 +97,10 @@ console.log(part2Sum)
     Modified for node:
     */
 
-    ((n = `_|one|two|three|four|five|six|seven|eight|nine`),
+;   ((n = `_|one|two|three|four|five|six|seven|eight|nine`),
         (a = 0),
         data.trim().split`\n`.map(
             (t) => (
-                console.log(t),
                 (s = [...t].map(
                     (a, i) => (
                         (q = n.split`|`.indexOf(
