@@ -7,8 +7,6 @@ debug = False
 def main():
     data = open("day05.input").read()
     part2 = Part2(data)
-    debug and pprint.pprint(part2.seed_ranges)
-    debug and pprint.pprint(part2.maps)
     print(min(part2.results))
     return part2
 
@@ -39,39 +37,37 @@ class Part2:
         for start, span in self.seed_ranges[:3]:
             self.recurser(start, span)
 
-    def recurser(self, start, span, depth=0):
-        debug and print((depth * "  ") + f"{depth}: Entering recurser with {start=} {span=}")
-        stop = start + span
-        for xlate, xlate_start, xlate_span in self.maps[depth]:
+    def recurser(self, seed, seed_range, depth=0):
+        stop = seed + seed_range
+        for trans, start, range_ in self.maps[depth]:
+            xlate_stop = start + range_
             debug and print(
                 (depth * "  ")
-                + f"{depth}: Comparing against {xlate=} {xlate_start=} {xlate_span=}"
+                + f"{depth}: {seed=:04x} {stop=:04x} {trans=:04x} {start=:04x} {range_=:04x}"
             )
-            xlate_stop = xlate_start + xlate_span
-            if start >= xlate_start and start < xlate_stop:
+            if seed >= start and seed < xlate_stop:
                 end = stop if stop < xlate_stop else xlate_stop
-                offset = start - xlate_start
-                new_span = end - start
-                xlated_start = xlate + offset
-                xlated_end = xlate + offset + new_span
+                bump = seed - start
+                new_span = end - seed
+                xlated_start = trans + bump
+                xlated_end = trans + bump + new_span
                 debug and print(
                     (depth * "  ")
-                    + f"{depth}: Result! {start=} {end=} {xlated_start=} {xlated_end=} New: {end=}"
+                    + f"{depth}: Result 1! {seed=:04x} {end=:04x} {xlated_start=:04x} {xlated_end=:04x} New: {end=:04x}"
                 )
-                start = end
+                seed = end
                 if (depth+1 == len(self.maps)) and xlated_start: # why not zero?
                     self.results.append(xlated_start)
                 elif (depth+1 != len(self.maps)):
                     self.recurser(xlated_start, xlated_end, depth + 1)
-                if start == stop:
-                    break
-        if start == stop:
-            return
-        if (depth+1 == len(self.maps)) and start: # why not zero?
-            self.results.append(start)
+            if seed == stop:
+                return
+        if (depth+1 == len(self.maps)) and seed: # why not zero?
+            self.results.append(seed)
         elif depth+1 != len(self.maps):
-            self.recurser(start, stop, depth + 1)
+            self.recurser(seed, stop, depth + 1)
 
 
 if __name__ == "__main__":
     part2 = main()
+
