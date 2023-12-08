@@ -38,29 +38,47 @@ class Part2:
 
     def recurser(self, seed, seed_range, depth=0):
         stop = seed + seed_range
-        for trans, start, range_ in self.maps[depth]:
+        for i,(trans, start, range_) in enumerate(self.maps[depth]):
             xlate_stop = start + range_
             debug and print(
                 (depth * "  ")
-                + f"{depth}: {seed=:04x} {stop=:04x} {trans=:04x} {start=:04x} {xlate_stop=:04x}"
+                + f"{depth}: map#{i} {seed=:08x} {seed+seed_range=:08x} | {trans=:08x} {start=:08x} {range_=:08x} {xlate_stop=:08x}"
             )
-            if not (seed >= start and seed < xlate_stop):
+            diff = seed - start
+            cs = diff >= 0
+            if not cs:
                 continue
-            end = stop if stop < xlate_stop else xlate_stop
+            diff = seed - xlate_stop
+            cc = diff < 0
+            if not cc:
+                continue
+
+            diff = stop - xlate_stop
+            cc = diff < 0
+            end = stop if cc else xlate_stop
+            
             bump = seed - start
             new_span = end - seed
             xlated_start = trans + bump
             debug and print(
                 (depth * "  ")
-                + f"{depth}: Result! {seed=:04x} {end=:04x} {xlated_start=:04x} {new_span=:04x} New: {end=:04x}"
+                + f"{depth}: Result! map#{i} {seed=:08x} {end=:08x} {xlated_start=:08x} {bump=:08x} {new_span=:08x} New Seed: {end:08x}"
             )
             seed = end
             if (depth+1 == len(self.maps)) and xlated_start: # why not zero?
+                if xlated_start == 1928058:
+                    import sys
+                    print("xlated_start", file=sys.stdout)
+                    sys.exit()
                 self.results.append(xlated_start)
             elif (depth+1 != len(self.maps)):
                 self.recurser(xlated_start, new_span, depth + 1)
             if seed == stop:
                 return
+        debug and print(
+            (depth * "  ")
+            + f"{depth}: Fallback! map#{i} {seed=:08x} {stop:08x}"
+        )
         if (depth+1 == len(self.maps)) and seed: # why not zero?
             self.results.append(seed)
         elif depth+1 != len(self.maps):
