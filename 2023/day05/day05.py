@@ -1,7 +1,6 @@
 import re
 import pprint
-
-debug = False
+debug = True
 
 
 def main():
@@ -43,7 +42,7 @@ class Part2:
             xlate_stop = start + range_
             debug and print(
                 (depth * "  ")
-                + f"{depth}: {seed=:04x} {stop=:04x} {trans=:04x} {start=:04x} {range_=:04x}"
+                + f"{depth}: {seed=:04x} {stop=:04x} {trans=:04x} {start=:04x} {xlate_stop=:04x}"
             )
             if not (seed >= start and seed < xlate_stop):
                 continue
@@ -51,16 +50,15 @@ class Part2:
             bump = seed - start
             new_span = end - seed
             xlated_start = trans + bump
-            xlated_end = trans + bump + new_span
             debug and print(
                 (depth * "  ")
-                + f"{depth}: Result! {seed=:04x} {end=:04x} {xlated_start=:04x} {xlated_end=:04x} New: {end=:04x}"
+                + f"{depth}: Result! {seed=:04x} {end=:04x} {xlated_start=:04x} {new_span=:04x} New: {end=:04x}"
             )
             seed = end
             if (depth+1 == len(self.maps)) and xlated_start: # why not zero?
                 self.results.append(xlated_start)
             elif (depth+1 != len(self.maps)):
-                self.recurser(xlated_start, xlated_end, depth + 1)
+                self.recurser(xlated_start, new_span, depth + 1)
             if seed == stop:
                 return
         if (depth+1 == len(self.maps)) and seed: # why not zero?
