@@ -60,16 +60,13 @@ class Part2:
             bump = seed - start
             new_span = end - seed
             xlated_start = trans + bump
+            xlated_end = xlated_start+new_span
             debug and print(
                 (depth * "  ")
-                + f"{depth}: Result! map#{i} {seed=:08x} {end=:08x} {xlated_start=:08x} {bump=:08x} {new_span=:08x} New Seed: {end:08x}"
+                + f"{depth}: Result! map#{i} {seed=:08x} {end=:08x} {xlated_start=:08x} {xlated_end=:08x} {bump=:08x} {new_span=:08x} New Seed: {end:08x}"
             )
             seed = end
             if (depth+1 == len(self.maps)) and xlated_start: # why not zero?
-                if xlated_start == 1928058:
-                    import sys
-                    print("xlated_start", file=sys.stdout)
-                    sys.exit()
                 self.results.append(xlated_start)
             elif (depth+1 != len(self.maps)):
                 self.recurser(xlated_start, new_span, depth + 1)
@@ -82,7 +79,7 @@ class Part2:
         if (depth+1 == len(self.maps)) and seed: # why not zero?
             self.results.append(seed)
         elif depth+1 != len(self.maps):
-            self.recurser(seed, stop, depth + 1)
+            self.recurser(seed, stop-seed, depth + 1)
 
 
 if __name__ == "__main__":
