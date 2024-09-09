@@ -23,3 +23,29 @@ for time, distance in zip(times,distances):
     totals.append(total)
 
 print(prod(totals))
+
+
+
+# part 2
+
+
+def get_number(line):
+    return int(''.join(re.findall(r'\d', line)))
+
+time = get_number(data[0])
+distance = get_number(data[1])
+
+
+for i in range(1,time):
+    if i * (time-i) > distance:
+        start = i
+        break
+
+
+for i in range(time,0,-1):
+    if i * (time-i) > distance:
+        finish = i
+        break
+
+
+print((finish-start)+1)
