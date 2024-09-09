@@ -1,5 +1,5 @@
 import re
-
+from functools import reduce
 
 data = open("day09.input").readlines()
 
@@ -24,7 +24,10 @@ def dwindle(numbers, lists=None):
         lists.append(new_list)
         dwindle(new_list, lists)
     if parent:
-        return sum(l[-1] for l in lists)
+        part1 = sum(l[-1] for l in lists)
+        part2 = reduce(lambda x,y: y-x, (l[0] for l in reversed(lists)), 0)
+        return part1,part2
 
 
-print(sum(dwindle(get_numbers(line)) for line in data))
+print(sum(dwindle(get_numbers(line))[0] for line in data))
+print(sum(dwindle(get_numbers(line))[1] for line in data))
