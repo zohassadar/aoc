@@ -17,3 +17,13 @@ total = 0
 for line in data:
     total += get_area(*get_numbers(line))
 print(total)
+
+
+def get_ribbon(x,y,z):
+    smallest = sum(2*d for d in sorted([x,y,z])[:-1])
+    return smallest + (x*y*z)
+
+total2 = 0
+for line in data:
+    total2 += get_ribbon(*get_numbers(line))
+print(total2)
