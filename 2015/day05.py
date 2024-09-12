@@ -26,3 +26,22 @@ for string in data:
         i+=1
 
 print(i)
+
+
+
+
+def double_test(string):
+    return bool(re.search(r'(..).*\1', string))
+
+
+def repeat_test(string):
+    return bool(re.search(r'(.).\1', string))
+
+def passes_all(string):
+    return double_test(string) and repeat_test(string)
+
+i = 0
+for string in data:
+    if passes_all(string):
+        i+=1
+print(i)
