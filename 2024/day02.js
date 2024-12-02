@@ -1,0 +1,1 @@
+document.body.innerText.trim().split('\n').map(l=>l.split(/\s+/).map(d=>+d)).map((l,i)=>{for(j=0;j<l.length-2;j++){d1=l[j]-l[j+1];d2=l[j+1]-l[j+2];if(!d1||!d2||!(d1>0==d2>0)||Math.abs(d1)>3||Math.abs(d2)>3){return 0}};return 1}).reduce((a,v)=>a+v,0)
